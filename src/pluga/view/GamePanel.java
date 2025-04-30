@@ -30,7 +30,8 @@ public class GamePanel extends JPanel
 		this.xVal = 500;
 		this.yVal = 400;
 		this.isRunning = true;
-		this.gameTick = new Timer(1000, gameTickListener);
+		this.gameTick = new Timer(1, gameTickListener);
+		this.setFocusable(true);
 		
 		setupListeners();
 		
@@ -56,6 +57,40 @@ public class GamePanel extends JPanel
 		});
 
 		gameTick.start();
+
+		this.addKeyListener(new KeyListener()
+		{
+			public void keyPressed(KeyEvent press)
+			{
+				
+				int key = press.getKeyCode();
+				
+				if (key == KeyEvent.VK_W)
+				{
+					yVal -= 8;
+				}
+				if (key == KeyEvent.VK_S)
+				{
+					yVal += 8;
+				}
+				if (key == KeyEvent.VK_A)
+				{
+					xVal -= 8;
+				}
+				if (key == KeyEvent.VK_D)
+				{
+					xVal += 8;
+				}
+			}
+			public void keyReleased(KeyEvent release)
+			{
+				
+			}
+			public void keyTyped(KeyEvent type)
+			{
+				
+			}
+		});
 	}
 
 	private void gameTick()
