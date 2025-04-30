@@ -27,7 +27,6 @@ public class GameFrame extends JFrame
 		setTitle("PLUGA");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
-		setBackground(new Color(1, 1, 1));
 		
 		setVisible(true);
 	}

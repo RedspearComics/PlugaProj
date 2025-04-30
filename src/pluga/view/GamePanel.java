@@ -3,11 +3,20 @@ package pluga.view;
 import javax.swing.*;
 
 import pluga.controller.Controller;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
 
 public class GamePanel extends JPanel
 {
 	private Controller app;
 	private SpringLayout layout;
+	private BufferedImage screenImage;
+	private int xVal;
+	private int yVal;
+	private boolean isRunning;
+	private Timer gameTick;
+	private ActionListener gameTickListener;
 	
 	
 	public GamePanel(Controller app)
@@ -16,5 +25,75 @@ public class GamePanel extends JPanel
 		
 		this.app = app;
 		this.layout = new SpringLayout();
+		this.screenImage = new BufferedImage(1000, 800, BufferedImage.TYPE_INT_ARGB);
+		this.setMinimumSize(new Dimension(1000, 800));
+		this.xVal = 500;
+		this.yVal = 400;
+		this.isRunning = true;
+		this.gameTick = new Timer(1000, gameTickListener);
+		
+		setupListeners();
+		
+	}
+	private void setupPanel()
+	{
+		
+	}
+	
+	private void setupLayout()
+	{
+		
+	}
+	
+	private void setupListeners()
+	{
+		gameTick.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent timerFire)
+			{
+				gameTick();
+			}
+		});
+
+		gameTick.start();
+	}
+
+	private void gameTick()
+	{
+		if (isRunning)
+		{
+			updateCanvas();
+		}
+	}
+	
+	private Polygon drawCharacterAt(int xValue, int yValue)
+	{
+		int [] xVals = {(xValue -20), (xValue + 20), (xValue + 20), (xValue -20)};
+		int [] yVals = {(yValue - 20), (yValue - 20), (yValue + 20), (yValue + 20)};
+		
+		Polygon shape = new Polygon(xVals, yVals, 4);
+		
+		return shape;
+	}
+	
+	private void updateCanvas()
+	{
+		Graphics2D drawingTool = (Graphics2D) screenImage.getGraphics();
+		
+		drawingTool.setColor(new Color(16, 18, 23));
+		drawingTool.fill(new Rectangle(0, 0, 1000, 800));
+		
+		drawingTool.setColor(new Color(23, 77, 194));
+		drawingTool.fill(drawCharacterAt(xVal, yVal));
+
+		drawingTool.dispose();
+		repaint();
+	}
+	
+	@Override 
+	protected void paintComponent(Graphics graphics)
+	{
+		super.paintComponent(graphics);
+		graphics.drawImage(screenImage, 0, 0, null);
 	}
 }
