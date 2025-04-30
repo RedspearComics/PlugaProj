@@ -17,6 +17,7 @@ public class GamePanel extends JPanel
 	private boolean isRunning;
 	private Timer gameTick;
 	private ActionListener gameTickListener;
+	private boolean [] directions;
 	
 	
 	public GamePanel(Controller app)
@@ -30,8 +31,9 @@ public class GamePanel extends JPanel
 		this.xVal = 500;
 		this.yVal = 400;
 		this.isRunning = true;
-		this.gameTick = new Timer(1, gameTickListener);
+		this.gameTick = new Timer((1000 / 60), gameTickListener);
 		this.setFocusable(true);
+		this.directions = new boolean [4];
 		
 		setupListeners();
 		
@@ -67,24 +69,41 @@ public class GamePanel extends JPanel
 				
 				if (key == KeyEvent.VK_W)
 				{
-					yVal -= 8;
+					directions[0] = true;
 				}
 				if (key == KeyEvent.VK_S)
 				{
-					yVal += 8;
+					directions[1] = true;
 				}
 				if (key == KeyEvent.VK_A)
 				{
-					xVal -= 8;
+					directions[2] = true;
 				}
 				if (key == KeyEvent.VK_D)
 				{
-					xVal += 8;
+					directions[3] = true;
 				}
 			}
 			public void keyReleased(KeyEvent release)
 			{
+				int key = release.getKeyCode();
 				
+				if (key == KeyEvent.VK_W)
+				{
+					directions[0] = false;
+				}
+				if (key == KeyEvent.VK_S)
+				{
+					directions[1] = false;
+				}
+				if (key == KeyEvent.VK_A)
+				{
+					directions[2] = false;
+				}
+				if (key == KeyEvent.VK_D)
+				{
+					directions[3] =false;
+				}
 			}
 			public void keyTyped(KeyEvent type)
 			{
@@ -97,6 +116,22 @@ public class GamePanel extends JPanel
 	{
 		if (isRunning)
 		{
+			if(directions[0] == true)
+			{
+				yVal -= 5;
+			}
+			if(directions[1] == true)
+			{
+				yVal += 5;
+			}
+			if(directions[2] == true)
+			{
+				xVal -= 5;
+			}
+			if(directions[3] == true)
+			{
+				xVal += 5;
+			}
 			updateCanvas();
 		}
 	}
