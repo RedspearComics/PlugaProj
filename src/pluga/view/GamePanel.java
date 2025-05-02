@@ -14,6 +14,8 @@ public class GamePanel extends JPanel
 	private BufferedImage screenImage;
 	private int xVal;
 	private int yVal;
+	private int mouseX;
+	private int mouseY;
 	private boolean isRunning;
 	private Timer gameTick;
 	private ActionListener gameTickListener;
@@ -132,6 +134,24 @@ public class GamePanel extends JPanel
 			{
 				xVal += 5;
 			}
+			
+			if(xVal > 1000)
+			{
+				xVal = 1000;
+			}
+			if(xVal < 0)
+			{
+				xVal = 0;
+			}
+			if (yVal > 770)
+			{
+				yVal = 770;
+			}
+			if (yVal < 0)
+			{
+				yVal = 0;
+			}
+			
 			updateCanvas();
 		}
 	}
