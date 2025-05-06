@@ -20,6 +20,7 @@ public class GamePanel extends JPanel
 	private Timer gameTick;
 	private ActionListener gameTickListener;
 	private boolean [] directions;
+	private int swordTimer;
 	
 	
 	public GamePanel(Controller app)
@@ -32,10 +33,13 @@ public class GamePanel extends JPanel
 		this.setMinimumSize(new Dimension(1000, 800));
 		this.xVal = 500;
 		this.yVal = 400;
+		this.mouseX = 0;
+		this.mouseY = 0;
 		this.isRunning = true;
 		this.gameTick = new Timer((1000 / 60), gameTickListener);
 		this.setFocusable(true);
 		this.directions = new boolean [4];
+		this.swordTimer = 0;
 		
 		setupListeners();
 		
@@ -108,10 +112,44 @@ public class GamePanel extends JPanel
 				}
 			}
 			public void keyTyped(KeyEvent type)
+			{}
+		});
+		
+		this.addMouseListener(new MouseListener()
+		{
+			public void mouseClicked(MouseEvent click)
+			{
+				//mouseX = click.getX();
+				//mouseY = click.getY();
+			}
+
+			public void mousePressed(MouseEvent press)
+			{
+				
+				if (swordTimer <= 0)
+				{
+					mouseX = press.getX();
+					mouseY = press.getY();
+					swordTimer = 20;
+				}
+			}
+
+			public void mouseReleased(MouseEvent release)
 			{
 				
 			}
+
+			public void mouseEntered(MouseEvent enter)
+			{
+
+			}
+
+			public void mouseExited(MouseEvent exit)
+			{
+			
+			}
 		});
+			
 	}
 
 	private void gameTick()
@@ -120,19 +158,19 @@ public class GamePanel extends JPanel
 		{
 			if(directions[0] == true)
 			{
-				yVal -= 5;
+				yVal -= 6;
 			}
 			if(directions[1] == true)
 			{
-				yVal += 5;
+				yVal += 6;
 			}
 			if(directions[2] == true)
 			{
-				xVal -= 5;
+				xVal -= 6;
 			}
 			if(directions[3] == true)
 			{
-				xVal += 5;
+				xVal += 6;
 			}
 			
 			if(xVal > 1000)
@@ -152,7 +190,13 @@ public class GamePanel extends JPanel
 				yVal = 0;
 			}
 			
+			if(swordTimer < 0)
+			{
+				swordTimer = 0;
+			}
+			
 			updateCanvas();
+			swordTimer--;
 		}
 	}
 	
@@ -166,6 +210,16 @@ public class GamePanel extends JPanel
 		return shape;
 	}
 	
+	private Polygon drawSword()
+	{
+		Polygon shape = new Polygon();
+		
+		shape.addPoint(xVal, yVal);
+		shape.addPoint(mouseX, mouseY);
+		
+		return shape;
+	}
+	
 	private void updateCanvas()
 	{
 		Graphics2D drawingTool = (Graphics2D) screenImage.getGraphics();
@@ -175,6 +229,13 @@ public class GamePanel extends JPanel
 		
 		drawingTool.setColor(new Color(23, 77, 194));
 		drawingTool.fill(drawCharacterAt(xVal, yVal));
+		
+		if (swordTimer > 0)
+		{
+			drawingTool.setStroke(new BasicStroke(2));
+			drawingTool.setColor(new Color(43,45,171));
+			drawingTool.draw(drawSword());
+		}
 
 		drawingTool.dispose();
 		repaint();
