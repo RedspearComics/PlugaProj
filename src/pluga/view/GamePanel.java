@@ -3,9 +3,11 @@ package pluga.view;
 import javax.swing.*;
 
 import pluga.controller.Controller;
+import pluga.model.BasicEnemy;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel
 {
@@ -21,6 +23,8 @@ public class GamePanel extends JPanel
 	private ActionListener gameTickListener;
 	private boolean [] directions;
 	private int swordTimer;
+	private int health;
+	private ArrayList <BasicEnemy> enemyList;
 	
 	
 	public GamePanel(Controller app)
@@ -40,13 +44,18 @@ public class GamePanel extends JPanel
 		this.setFocusable(true);
 		this.directions = new boolean [4];
 		this.swordTimer = 0;
+		this.health = 50;
+		this.enemyList = new ArrayList<BasicEnemy>();
 		
+		
+		setupPanel();
 		setupListeners();
 		
 	}
 	private void setupPanel()
 	{
-		
+		BasicEnemy enemy1 = new BasicEnemy(5,400,400,3);
+		enemyList.add(enemy1);
 	}
 	
 	private void setupLayout()
@@ -195,6 +204,10 @@ public class GamePanel extends JPanel
 				swordTimer = 0;
 			}
 			
+			if(health <= 0)
+			{
+				isRunning = false;
+			}
 			updateCanvas();
 			swordTimer--;
 		}
@@ -235,6 +248,13 @@ public class GamePanel extends JPanel
 			drawingTool.setStroke(new BasicStroke(2));
 			drawingTool.setColor(new Color(43,45,171));
 			drawingTool.draw(drawSword());
+		}
+		
+		for (int index = 0; index < enemyList.size(); index++)
+		{
+			enemyList.get(index).enemyCheck(xVal, yVal);
+			drawingTool.setColor(new Color(242,17,17));
+			drawingTool.fill(enemyList.get(index).drawEnemy());
 		}
 
 		drawingTool.dispose();
