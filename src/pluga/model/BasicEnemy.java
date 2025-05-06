@@ -22,51 +22,34 @@ public class BasicEnemy
 	
 	public void enemyCheck(int playerX, int playerY)
 	{
-		if (playerX > xVal)
+		if (playerX != xVal)
 		{
-			if (Math.abs(playerX - xVal) < speed)
-			{
-				xVal += (playerX - xVal);
-			}
-			else
-			{
-				xVal += speed;
-			}
-		}
-		if (playerX < xVal)
-		{
-			if (Math.abs(playerX - xVal) < speed)
-			{
-				xVal += (playerX - xVal);
-			}
-			else
-			{
-				xVal -= speed;
-			}
+			xVal += (Math.cos(Math.atan2(playerY - yVal, playerX - xVal)) * speed);
+			yVal += (Math.sin(Math.atan2(playerY - yVal, playerX - xVal)) * speed);
 		}
 		
-		if (playerY > yVal)
-		{
-			if (Math.abs(playerY - yVal) < speed)
-			{
-				yVal +=(playerY - yVal);
-			}
-			else
-			{
-				yVal += speed;
-			}
-		}
-		if (playerY < yVal)
-		{
-			if (Math.abs(playerY - yVal) < speed)
-			{
-				yVal +=(playerY - yVal);
-			}
-			else
-			{
-				yVal -= speed;
-			}
-		}
+//		if (playerY > yVal)
+//		{
+//			if (Math.abs(playerY - yVal) < speed)
+//			{
+//				yVal +=(playerY - yVal);
+//			}
+//			else
+//			{
+//				yVal += speed;
+//			}
+//		}
+//		if (playerY < yVal)
+//		{
+//			if (Math.abs(playerY - yVal) < speed)
+//			{
+//				yVal +=(playerY - yVal);
+//			}
+//			else
+//			{
+//				yVal -= speed;
+//			}
+//		}
 	}
 	
 	public Polygon drawEnemy()

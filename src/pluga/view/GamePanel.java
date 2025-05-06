@@ -54,8 +54,10 @@ public class GamePanel extends JPanel
 	}
 	private void setupPanel()
 	{
-		BasicEnemy enemy1 = new BasicEnemy(5,400,400,3);
+		BasicEnemy enemy1 = new BasicEnemy(5,0,0,3);
+		BasicEnemy enemy2 = new BasicEnemy(5, 1000, 800, 4);
 		enemyList.add(enemy1);
+		enemyList.add(enemy2);
 	}
 	
 	private void setupLayout()
