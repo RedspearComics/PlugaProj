@@ -25,9 +25,11 @@ public class BasicEnemy
 		if (playerX != xVal)
 		{
 			xVal += (Math.cos(Math.atan2(playerY - yVal, playerX - xVal)) * speed);
+		}
+		if (playerY != yVal)
+		{
 			yVal += (Math.sin(Math.atan2(playerY - yVal, playerX - xVal)) * speed);
 		}
-		
 //		if (playerY > yVal)
 //		{
 //			if (Math.abs(playerY - yVal) < speed)
@@ -60,5 +62,15 @@ public class BasicEnemy
 		Polygon shape = new Polygon(xVals, yVals, 4);
 		
 		return shape;
+	}
+	
+	public void hit()
+	{
+		this.health--;
+	}
+	
+	public int getHealth()
+	{
+		return this.health;
 	}
 }

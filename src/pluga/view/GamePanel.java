@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.util.ArrayList;
+import java.awt.geom.AffineTransform;
 
 public class GamePanel extends JPanel
 {
@@ -54,10 +55,10 @@ public class GamePanel extends JPanel
 	}
 	private void setupPanel()
 	{
-		BasicEnemy enemy1 = new BasicEnemy(5,0,0,3);
-		BasicEnemy enemy2 = new BasicEnemy(5, 1000, 800, 4);
-		enemyList.add(enemy1);
-		enemyList.add(enemy2);
+		BasicEnemy enemy1 = new BasicEnemy(200,0,0,3);
+		BasicEnemy enemy2 = new BasicEnemy(200, 1000, 800, 4);
+		//enemyList.add(enemy1);
+		//enemyList.add(enemy2);
 	}
 	
 	private void setupLayout()
@@ -225,12 +226,9 @@ public class GamePanel extends JPanel
 		return shape;
 	}
 	
-	private Polygon drawSword()
+	private Rectangle drawSword()
 	{
-		Polygon shape = new Polygon();
-		
-		shape.addPoint(xVal, yVal);
-		shape.addPoint(mouseX, mouseY);
+		Rectangle shape = new Rectangle(xVal, yVal, 6, 160);
 		
 		return shape;
 	}
@@ -239,24 +237,54 @@ public class GamePanel extends JPanel
 	{
 		Graphics2D drawingTool = (Graphics2D) screenImage.getGraphics();
 		
+		AffineTransform restore = drawingTool.getTransform();
+		
 		drawingTool.setColor(new Color(16, 18, 23));
 		drawingTool.fill(new Rectangle(0, 0, 1000, 800));
 		
 		drawingTool.setColor(new Color(23, 77, 194));
 		drawingTool.fill(drawCharacterAt(xVal, yVal));
 		
+		
+		
 		if (swordTimer > 0)
 		{
-			drawingTool.setStroke(new BasicStroke(2));
+				
+//			double rotation = Math.tan((double)(yVal - mouseY) / (double)(xVal - mouseX));
+			double rotation = Math.atan2(mouseY - yVal, mouseX - xVal) - (Math.PI / 2);
+			
+			drawingTool.rotate(rotation, xVal, yVal);
+			
 			drawingTool.setColor(new Color(43,45,171));
-			drawingTool.draw(drawSword());
+			drawingTool.fill(drawSword());
+			
+			
+			drawingTool.setTransform(restore);
+
+			
 		}
 		
 		for (int index = 0; index < enemyList.size(); index++)
 		{
-			enemyList.get(index).enemyCheck(xVal, yVal);
+			BasicEnemy currentEnemy = enemyList.get(index);
+			currentEnemy.enemyCheck(xVal, yVal);
 			drawingTool.setColor(new Color(242,17,17));
-			drawingTool.fill(enemyList.get(index).drawEnemy());
+			drawingTool.fill(currentEnemy.drawEnemy());
+			
+			if(swordTimer > 0)
+			{
+				
+				if(currentEnemy.drawEnemy().intersects(drawSword()))
+				{
+					currentEnemy.hit();
+					System.out.println(currentEnemy.getHealth());
+				}
+			}
+			
+			if(currentEnemy.getHealth() < 1)
+			{
+				enemyList.remove(index);
+			}
 		}
 
 		drawingTool.dispose();
