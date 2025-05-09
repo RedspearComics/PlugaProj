@@ -1,15 +1,17 @@
 package pluga.model;
 
+import java.awt.Color;
 import java.awt.Polygon;
 
 import pluga.view.GamePanel;
 
 public class BasicEnemy
 {
-	private int xVal;
-	private int yVal;
-	private int health;
-	private int speed;
+	protected int xVal;
+	protected int yVal;
+	protected int health;
+	protected int speed;
+	protected Color color;
 	
 	public BasicEnemy(int health, int x, int y, int speed)
 	{
@@ -17,6 +19,7 @@ public class BasicEnemy
 		this.xVal = x;
 		this.yVal = y;
 		this.speed = speed;
+		this.color = new Color(242,17,17);
 		
 	}
 	
@@ -30,29 +33,8 @@ public class BasicEnemy
 		{
 			yVal += (Math.sin(Math.atan2(playerY - yVal, playerX - xVal)) * speed);
 		}
-//		if (playerY > yVal)
-//		{
-//			if (Math.abs(playerY - yVal) < speed)
-//			{
-//				yVal +=(playerY - yVal);
-//			}
-//			else
-//			{
-//				yVal += speed;
-//			}
-//		}
-//		if (playerY < yVal)
-//		{
-//			if (Math.abs(playerY - yVal) < speed)
-//			{
-//				yVal +=(playerY - yVal);
-//			}
-//			else
-//			{
-//				yVal -= speed;
-//			}
-//		}
 	}
+	
 	
 	public Polygon drawEnemy()
 	{
@@ -72,5 +54,10 @@ public class BasicEnemy
 	public int getHealth()
 	{
 		return this.health;
+	}
+	
+	public Color getColor()
+	{
+		return this.color;
 	}
 }

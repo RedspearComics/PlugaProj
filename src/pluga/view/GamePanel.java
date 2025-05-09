@@ -3,7 +3,7 @@ package pluga.view;
 import javax.swing.*;
 
 import pluga.controller.Controller;
-import pluga.model.BasicEnemy;
+import pluga.model.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
@@ -55,10 +55,14 @@ public class GamePanel extends JPanel
 	}
 	private void setupPanel()
 	{
-		BasicEnemy enemy1 = new BasicEnemy(200,0,0,3);
-		BasicEnemy enemy2 = new BasicEnemy(200, 1000, 800, 4);
-		//enemyList.add(enemy1);
-		//enemyList.add(enemy2);
+		BasicEnemy enemy1 = new BasicEnemy(75,0,0,3);
+		BasicEnemy enemy2 = new BasicEnemy(75, 1000, 800, 4);
+		BasicEnemy tpEnemy1 = new TeleportingEnemy(50, 1000,0, 2);
+		BasicEnemy rnEnemy1 = new RunnerEnemy(100, 400,400, 3);
+		enemyList.add(enemy1);
+		enemyList.add(enemy2);
+		enemyList.add(tpEnemy1);
+		enemyList.add(rnEnemy1);
 	}
 	
 	private void setupLayout()
@@ -268,7 +272,7 @@ public class GamePanel extends JPanel
 		{
 			BasicEnemy currentEnemy = enemyList.get(index);
 			currentEnemy.enemyCheck(xVal, yVal);
-			drawingTool.setColor(new Color(242,17,17));
+			drawingTool.setColor(currentEnemy.getColor());
 			drawingTool.fill(currentEnemy.drawEnemy());
 			
 			if(swordTimer > 0)
