@@ -10,6 +10,7 @@ import java.awt.image.*;
 import java.util.ArrayList;
 import java.awt.geom.AffineTransform;
 import java.util.HashMap;
+import javax.sound.sampled.*;
 
 public class GamePanel extends JPanel
 {
@@ -27,7 +28,9 @@ public class GamePanel extends JPanel
 	private int swordTimer;
 	private int itemTimer;
 	private int health;
+	private int kills;
 	private ArrayList <BasicEnemy> enemyList;
+	
 	private HashMap<Integer, Integer> itemSet;
 	
 	
@@ -50,7 +53,9 @@ public class GamePanel extends JPanel
 		this.swordTimer = 0;
 		this.itemTimer = 1200;
 		this.health = 50;
+		this.kills = 0;
 		this.enemyList = new ArrayList<BasicEnemy>();
+		
 		this.itemSet = new HashMap<Integer, Integer>();
 		
 		
@@ -60,12 +65,12 @@ public class GamePanel extends JPanel
 	}
 	private void setupPanel()
 	{
-		BasicEnemy enemy1 = new BasicEnemy(75,0,0,3);
-		BasicEnemy enemy2 = new BasicEnemy(75, 1000, 800, 4);
+		BasicEnemy enemy = new BasicEnemy(75,0,0,3);
+		BasicEnemy enemy0 = new BasicEnemy(75, 1000, 800, 4);
 		BasicEnemy tpEnemy1 = new TeleportingEnemy(50, 1000,0, 2);
-		BasicEnemy rnEnemy1 = new RunnerEnemy(100, 400,400, 3);
-		enemyList.add(enemy1);
-		enemyList.add(enemy2);
+		BasicEnemy rnEnemy1 = new RunnerEnemy(100, 400,400, 1);
+		enemyList.add(enemy);
+		enemyList.add(enemy0);
 		enemyList.add(tpEnemy1);
 		enemyList.add(rnEnemy1);
 		itemSet.put(0, 1);
@@ -319,7 +324,7 @@ public class GamePanel extends JPanel
 			if(swordTimer > 0)
 			{
 				
-				if(currentEnemy.drawEnemy().intersects(drawSword()))
+				if(currentEnemy.drawEnemy().intersects(new Rectangle(xVal - 100, yVal - 100, 200, 200)))
 				{
 					currentEnemy.hit();
 					System.out.println(currentEnemy.getHealth());
@@ -328,7 +333,39 @@ public class GamePanel extends JPanel
 			
 			if(currentEnemy.getHealth() < 1)
 			{
+				if(currentEnemy instanceof TeleportingEnemy)
+				{
+					enemyList.add(new TeleportingEnemy((int) (Math.random() * 200), (int) (Math.random() * 1000), (int) (Math.random() * 800), 1 +(int) (Math.random() * 5)));
+					
+					if (Math.random() > 0.70)
+					{
+					enemyList.add(new TeleportingEnemy((int) (Math.random() * 200),(int) (Math.random() * 1000), (int) (Math.random() * 800), 1 +(int) (Math.random() * 5)));
+					}
+					
+				}
+				else if (currentEnemy instanceof RunnerEnemy)
+				{
+					System.out.println("test");
+					enemyList.add(new RunnerEnemy((int) (Math.random() * 200), (int) (Math.random() * 1000), (int) (Math.random() * 800), 1 +(int) (Math.random() * 2)));
+					
+					if (Math.random() > 0.95)
+					{
+					enemyList.add(new RunnerEnemy((int) (Math.random() * 200), (int) (Math.random() * 1000), (int) (Math.random() * 800), 1 +(int) (Math.random() * 2)));
+					}
+				
+				}
+				else
+				{
+					enemyList.add(new BasicEnemy((int) (Math.random() * 200), (int) (Math.random() * 1000), (int) (Math.random() * 800), 1+(int) (Math.random() * 5)));
+					
+					if (Math.random() > 0.90)
+					{
+					enemyList.add(new BasicEnemy((int) (Math.random() * 200), (int) (Math.random() * 1000), (int) (Math.random() * 800), 1+(int) (Math.random() * 5)));
+					}
+				}
+				
 				enemyList.remove(index);
+				index--;
 			}
 		}
 

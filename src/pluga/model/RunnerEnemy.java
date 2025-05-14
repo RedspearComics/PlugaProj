@@ -16,12 +16,14 @@ public class RunnerEnemy extends BasicEnemy
 		if (playerX != xVal)
 		{
 			//xVal += (Math.cos(Math.atan2(playerY - yVal, playerX - xVal)) * speed);
-			xVal += (int) (-0.03 * (xVal - playerX));
+			xVal += (int) (-0.03 * (xVal - playerX) * speed);
+			
 		}
 		if (playerY != yVal)
 		{
 			//yVal += (Math.sin(Math.atan2(playerY - yVal, playerX - xVal)) * speed);
-			yVal += (int) (-0.03 *(yVal - playerY));
+			yVal += (int) (-0.03 *(yVal - playerY) * speed);
+			
 		}
 	
 	}
