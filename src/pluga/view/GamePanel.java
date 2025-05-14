@@ -9,6 +9,7 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.util.ArrayList;
 import java.awt.geom.AffineTransform;
+import java.util.HashMap;
 
 public class GamePanel extends JPanel
 {
@@ -24,8 +25,10 @@ public class GamePanel extends JPanel
 	private ActionListener gameTickListener;
 	private boolean [] directions;
 	private int swordTimer;
+	private int itemTimer;
 	private int health;
 	private ArrayList <BasicEnemy> enemyList;
+	private HashMap<Integer, Integer> itemSet;
 	
 	
 	public GamePanel(Controller app)
@@ -45,8 +48,10 @@ public class GamePanel extends JPanel
 		this.setFocusable(true);
 		this.directions = new boolean [4];
 		this.swordTimer = 0;
+		this.itemTimer = 1200;
 		this.health = 50;
 		this.enemyList = new ArrayList<BasicEnemy>();
+		this.itemSet = new HashMap<Integer, Integer>();
 		
 		
 		setupPanel();
@@ -63,13 +68,19 @@ public class GamePanel extends JPanel
 		enemyList.add(enemy2);
 		enemyList.add(tpEnemy1);
 		enemyList.add(rnEnemy1);
+		itemSet.put(0, 1);
+		itemSet.put(1, 3);
+		itemSet.put(2, 5);
+		itemSet.put(3, 10);
 	}
 	
 	private void setupLayout()
 	{
 		
 	}
-	
+	/**
+	 * Sets up mouse and key listeners
+	 */
 	private void setupListeners()
 	{
 		gameTick.addActionListener(new ActionListener()
@@ -134,10 +145,7 @@ public class GamePanel extends JPanel
 		this.addMouseListener(new MouseListener()
 		{
 			public void mouseClicked(MouseEvent click)
-			{
-				//mouseX = click.getX();
-				//mouseY = click.getY();
-			}
+			{}
 
 			public void mousePressed(MouseEvent press)
 			{
@@ -151,23 +159,19 @@ public class GamePanel extends JPanel
 			}
 
 			public void mouseReleased(MouseEvent release)
-			{
-				
-			}
+			{}
 
 			public void mouseEntered(MouseEvent enter)
-			{
-
-			}
+			{}
 
 			public void mouseExited(MouseEvent exit)
-			{
-			
-			}
+			{}
 		});
 			
 	}
-
+	/**
+	 * Runs each frame. calls update canvas and does bounds checks. 
+	 */
 	private void gameTick()
 	{
 		if (isRunning)
@@ -217,9 +221,15 @@ public class GamePanel extends JPanel
 			}
 			updateCanvas();
 			swordTimer--;
+			itemTimer--;
 		}
 	}
-	
+	/**
+	 * Draws the character at a specified point on the screen
+	 * @param xValue The midpoint x value of the character
+	 * @param yValue The midpoint y value of the character
+	 * @return the character polygon
+	 */
 	private Polygon drawCharacterAt(int xValue, int yValue)
 	{
 		int [] xVals = {(xValue -20), (xValue + 20), (xValue + 20), (xValue -20)};
@@ -229,14 +239,31 @@ public class GamePanel extends JPanel
 		
 		return shape;
 	}
-	
+	/**
+	 * Draws a sword
+	 * @return a rectangle shape, which is the sword in question
+	 */
 	private Rectangle drawSword()
 	{
 		Rectangle shape = new Rectangle(xVal, yVal, 6, 160);
 		
 		return shape;
 	}
-	
+	/** 
+	 * draws a small item on the screen when called
+	 * @param xValue the x value of the top left corner of the item
+	 * @param yValue the y value of the top left corner of the item
+	 * @return the item shape
+	 */
+	private Rectangle drawItem(int xValue, int yValue)
+	{
+		Rectangle item = new Rectangle(xValue, yValue, 20, 40);
+		
+		return item;
+	}
+	/**
+	 * called every frame by gameTick(). draws the player, enemies, sword, and item.
+	 */
 	private void updateCanvas()
 	{
 		Graphics2D drawingTool = (Graphics2D) screenImage.getGraphics();
@@ -266,6 +293,20 @@ public class GamePanel extends JPanel
 			drawingTool.setTransform(restore);
 
 			
+		}
+		
+		if (itemTimer < 0)
+		{
+			int itemType = itemSet.get((int) Math.random() * itemSet.size());
+			drawingTool.setColor(new Color(57,237,12));
+			drawingTool.fill(drawItem(300,300));
+
+			if (drawCharacterAt(xVal, yVal).intersects(drawItem(300,300)))
+			{
+				itemTimer = 1200;
+				health += itemType;
+				
+			}
 		}
 		
 		for (int index = 0; index < enemyList.size(); index++)
